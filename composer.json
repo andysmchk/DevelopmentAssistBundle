@@ -18,10 +18,14 @@
   "require": {
     "php": "^7.3.0",
     "mustache/mustache": "^2.13"
-  }
-  ,
+  },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9"
+  },
+  "scripts": {
+    "test": [
+      "@php ./vendor/phpunit/phpunit/phpunit"
+    ]
   }
 }
