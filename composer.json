@@ -1,0 +1,27 @@
+{
+  "name": "rewsam/development-assist",
+  "description": "Development tools to help with daily tasks",
+  "minimum-stability": "stable",
+  "type": "symfony-bundle",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Andrew Samchuk",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rewsam\\DevelopmentAssist\\": ""
+    }
+  },
+  "require": {
+    "php": "^7.3.0",
+    "mustache/mustache": "^2.13"
+  }
+  ,
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9"
+  }
+}

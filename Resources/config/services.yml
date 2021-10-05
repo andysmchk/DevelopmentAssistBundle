@@ -1,0 +1,35 @@
+parameters:
+  development_assist.template.templates_directory: ''
+
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  development_assist.template.parameter.default_builder:
+    class: 'Rewsam\DevelopmentAssist\Service\Template\Parameter\SimpleTemplateParametersBuilder'
+
+  development_assist.template.parameter.entity_builder:
+    class: 'Rewsam\DevelopmentAssist\Service\Template\Parameter\EntityTemplateParametersBuilder'
+    arguments:
+      - '@development_assist.template.parameter.default_builder'
+
+  development_assist.template.render.default: '@development_assist.template.render.mustache'
+
+  development_assist.template.render.mustache:
+    class: 'Rewsam\DevelopmentAssist\Service\Template\Render\MustacheRender'
+    arguments:
+      - '%development_assist.template.templates_directory%'
+
+  development_assist.template.factory:
+    class: 'Rewsam\DevelopmentAssist\Service\Template\TemplateFactory'
+    arguments:
+      - '@development_assist.template.render.default'
+
+  Rewsam\DevelopmentAssist\Service\Template\TemplatingRegistry:
+    alias: 'development_assist.template.templating.registry'
+    public: true
+
+  development_assist.template.templating.registry:
+    class: 'Rewsam\DevelopmentAssist\Service\Template\TemplatingRegistry'
