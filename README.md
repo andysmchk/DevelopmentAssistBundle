@@ -1,3 +1,5 @@
+![workflow](https://github.com/andysmchk/DevelopmentAssistBundle/actions/workflows/test.yml/badge.svg)
+
 Installation
 ============
 
