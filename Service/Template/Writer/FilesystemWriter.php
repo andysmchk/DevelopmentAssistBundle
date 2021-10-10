@@ -2,12 +2,10 @@
 
 namespace Rewsam\DevelopmentAssist\Service\Template\Writer;
 
-use Symfony\Component\Filesystem\Filesystem;
-
 class FilesystemWriter implements Writer
 {
     /**
-     * @var Filesystem
+     * @var SimpleFilesystemAdapter
      */
     private $filesystem;
     /**
@@ -19,11 +17,16 @@ class FilesystemWriter implements Writer
      */
     private $override;
 
-    public function __construct(bool $dry, bool $override)
+    public function __construct(SimpleFilesystemAdapter $filesystem, bool $dry, bool $override)
     {
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem;
         $this->dry = $dry;
         $this->override = $override;
+    }
+
+    public static function createWithFilesystem(bool $dry, bool $override): self
+    {
+        return new self(SimpleFilesystemAdapter::create(), $dry, $override);
     }
 
     public function exists(string $destination): bool
@@ -33,28 +36,26 @@ class FilesystemWriter implements Writer
 
     public function dump(string $destination, string $content): void
     {
-        if (!$this->override && $this->exists($destination)) {
+        if ($this->dry) {
             return;
         }
 
-        if (!$this->dry) {
-            $this->filesystem->mkdir(dirname($destination));
-            $this->filesystem->dumpFile($destination, $content);
+        if ($this->override || !$this->exists($destination)) {
+            $this->filesystem->writeTo($destination, $content);
         }
     }
 
     public function append(string $destination, string $content): void
     {
-        if (!$this->dry) {
-            $original = file_get_contents($destination);
+        if ($this->dry) {
+            return;
+        }
+
+        if ($this->exists($destination)) {
+            $original = $this->filesystem->readFrom($destination);
             $content = str_replace($content, '', $original) . $content;
 
-            $this->filesystem->dumpFile($destination, $content);
+            $this->filesystem->writeTo($destination, $content);
         }
-    }
-
-    public function isDirectory(string $destination): bool
-    {
-        return $destination === dirname($destination);
     }
 }

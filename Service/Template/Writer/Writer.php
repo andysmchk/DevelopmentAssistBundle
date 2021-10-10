@@ -9,6 +9,4 @@ interface Writer
     public function dump(string $destination, string $content): void;
 
     public function append(string $destination, string $content): void;
-
-    public function isDirectory(string $destination): bool;
 }

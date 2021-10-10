@@ -31,7 +31,7 @@ class TemplatingConfiguration
         }
         $this->parameters = [];
 
-        foreach ($this->configuration['parameters'] as $parameter) {
+        foreach ($this->configuration['parameters'] ?? [] as $parameter) {
             $this->parameters[] = new InputParameterDefinition($parameter['name'], $parameter['key']);
         }
 
@@ -40,20 +40,30 @@ class TemplatingConfiguration
 
     public function getTemplateDefinitions(): iterable
     {
-        foreach ($this->configuration['destinations'] as $sectionName => $config) {
+        foreach ($this->configuration['destinations'] ?? [] as $sectionName => $config) {
             $sourcePath = $config['files_source_path'];
             $destinationPath = $config['destination_path'];
             $writeMode = $config['write_mode'];
             $files = $config['files'];
 
-            //Example: ControllerV1: '{ENTITY_NAME}ControllerV1.php'
             foreach ($files as $sourceFileName => $destinationFileName) {
-                $destination = sprintf('%s/%s', $destinationPath, $destinationFileName);
-                $source = sprintf('%s/%s', $sourcePath, $sourceFileName);
+                $fileDestinationPath = $destinationPath;
+                $fileSourcePath = $sourcePath;
 
                 if (is_numeric($sourceFileName)) {
-                    $source = sprintf('%s/%s', $sourcePath, $destinationFileName);
-                    $destination = $destinationPath;
+                    $sourceFileName = $destinationFileName;
+                    $destinationFileName = $fileDestinationPath;
+                    $fileDestinationPath = '';
+                }
+
+                $destination = $destinationFileName;
+                if ($fileDestinationPath && $destination) {
+                    $destination = sprintf('%s/%s', $fileDestinationPath, $destination);
+                }
+
+                $source = $sourceFileName;
+                if ($fileSourcePath && $source) {
+                    $source = sprintf('%s/%s', $fileSourcePath, $source);
                 }
 
                 yield new TemplateDefinition($destination, $source, $writeMode);

@@ -41,9 +41,4 @@ class ConsoleOutputWriterDecorator implements Writer
         $this->output->writeln('<comment>Updated file: ' . $destination . '</comment>');
         $this->output->writeln('<comment>Updated content: ' . $content . '</comment>', OutputInterface::OUTPUT_RAW | OutputInterface::VERBOSITY_VERY_VERBOSE);
     }
-
-    public function isDirectory(string $destination): bool
-    {
-        return $this->subject->isDirectory($destination);
-    }
 }

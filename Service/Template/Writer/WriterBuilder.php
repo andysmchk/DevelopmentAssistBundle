@@ -23,7 +23,7 @@ class WriterBuilder
 
     public function build(): Writer
     {
-        $writer = new FilesystemWriter($this->dry, $this->override);
+        $writer = FilesystemWriter::createWithFilesystem($this->dry, $this->override);
 
         if ($this->output) {
             $writer = new ConsoleOutputWriterDecorator($writer, $this->output);
